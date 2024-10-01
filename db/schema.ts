@@ -7,7 +7,7 @@ export const courses = pgTable('courses', {
   imageSrc: text('image_src').notNull(),
 });
 
-export const coursesRelarions = relations(courses, ({many}) => ({
+export const coursesRelations = relations(courses, ({many}) => ({
   userProgress: many(userProgress),
 }));
 

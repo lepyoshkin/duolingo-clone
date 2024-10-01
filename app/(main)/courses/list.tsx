@@ -1,9 +1,9 @@
 'use client';
+import {useTransition} from 'react';
 
 import {courses, userProgress} from '@/db/schema';
 import {Card} from './card';
 import {useRouter} from 'next/navigation';
-import {useTransition} from 'react';
 import {upsertUserProgress} from '@/actions/user-progress';
 import {toast} from 'sonner';
 
@@ -20,7 +20,7 @@ export const List = ({activeCourseId, courses}: Props) => {
     if (pending) return;
 
     if (id === activeCourseId) {
-      return router.push('learn');
+      return router.push('/learn');
     }
 
     startTransition(() => {
