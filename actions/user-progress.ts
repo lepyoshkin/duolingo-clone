@@ -1,11 +1,11 @@
 'use server';
+import {redirect} from 'next/navigation';
 
+import {revalidatePath} from 'next/cache';
 import db from '@/db/drizzle';
 import {getCourseById, getUserProgress} from '@/db/queries';
 import {userProgress} from '@/db/schema';
 import {auth, currentUser} from '@clerk/nextjs/server';
-import {revalidatePath} from 'next/cache';
-import {redirect} from 'next/navigation';
 
 export const upsertUserProgress = async (courseId: number) => {
   const {userId} = await auth();
@@ -33,14 +33,18 @@ export const upsertUserProgress = async (courseId: number) => {
       userName: user.firstName || 'User',
       userImageSrc: user.imageUrl || '/mascot.svg',
     });
+
+    revalidatePath('/courses');
+    revalidatePath('/learn');
+    redirect('/learn');
   }
 
-  // await db.insert(userProgress).values({
-  //   userId,
-  //   activeCourseId: courseId,
-  //   userName: user.firstName || 'User',
-  //   userImageSrc: user.imageUrl || '/mascot.svg',
-  // });
+  await db.insert(userProgress).values({
+    userId,
+    activeCourseId: courseId,
+    userName: user.firstName || 'User',
+    userImageSrc: user.imageUrl || '/mascot.svg',
+  });
 
   revalidatePath('/courses');
   revalidatePath('/learn');
